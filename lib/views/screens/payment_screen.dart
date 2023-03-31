@@ -84,7 +84,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 "https://jsoft.com/?trxref=${getit!.referalCode}&reference=${getit!.referalCode}") {
               logger.d('The payment is here');
               // verifyTransaction(reference);
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+              getit!.topUp(context, 30000);
             }
 
             return NavigationDecision.prevent;

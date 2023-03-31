@@ -4,6 +4,7 @@ import 'package:green_tech_app/getit.dart';
 import 'package:green_tech_app/utils/base_view_builder.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
 import 'package:green_tech_app/utils/form_style.dart';
+import 'package:green_tech_app/utils/string_util.dart';
 import 'package:green_tech_app/utils/text_style_utils.dart';
 import 'package:green_tech_app/viewModel/cart_vm.dart';
 import 'package:green_tech_app/viewModel/product_view_model.dart';
@@ -54,10 +55,11 @@ class HomeScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: kcPrimaryColor.withOpacity(0.1)),
                                 child: Text(
-                                  'N${pVm.userDetailModel!.data!.balance!}',
+                                  'N${pVm.userDetailModel!.data!.balance!}'
+                                      .replaceAllMapped(reg, addCommaToString),
                                   style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
+                                      color: kcPrimaryColor,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w600),
                                 )),
                             const Spacer(),

@@ -54,9 +54,22 @@ class CartServices extends BaseDatasource {
 
 
    Future<ApiResponse<GenericResponse>> proceedPayment(String orderId) async {
-    final response = await sendPut(endpoint: 'orders/$orderId/process-payment');
+    final response = await sendPut(endpoint: 'orders/$orderId/process-payment',payload: {});
     return response.transform((data) => GenericResponse.fromJson(data));
   }
+
+   Future<ApiResponse<GenericResponse>> topUp(num amount) async {
+       final userId = getIt.get<LocalStorage>().getUserId();
+    final response = await sendPut(endpoint: 'users/$userId/top-up', payload: {
+      'amount':amount
+    });
+    return response.transform((data) => GenericResponse.fromJson(data));
+  }
+
+
+
+
+
 
 
 //This is effect from flutterwave payment checkout

@@ -7,19 +7,27 @@ showSuccess(
     required String title,
     required String btnText,
     required VoidCallback callback,
-    bool isCancel=true,
+
+    bool isPopNext = false,
+    bool isCancel = true,
+    VoidCallback? popCallback,
+
+
     Color? textColor}) {
   showDialog(
       context: context!,
       builder: (context) {
         return Dialog(
+          
           child: SuccessDialog(
-            title: title,
-            buttonText: btnText,
-            callback: callback,
-            isCancel: isCancel,
-            titleColor: textColor,
-          ),
+              title: title,
+              buttonText: btnText,
+              callback: callback,
+              isCancel: isCancel,
+              titleColor: textColor,
+              isPopNext: isPopNext,
+              popCallback:popCallback
+              ),
         );
       });
 }
@@ -29,14 +37,19 @@ class SuccessDialog extends StatelessWidget {
   final String? buttonText;
   final Color? titleColor;
   final VoidCallback? callback;
+  final VoidCallback? popCallback;
   final bool? isCancel;
-  const SuccessDialog(
-      {Key? key,
-      this.title,
-      this.buttonText,
-      this.callback,
-      this.titleColor = kcPrimaryColor, this.isCancel})
-      : super(key: key);
+  final bool? isPopNext;
+  const SuccessDialog({
+    Key? key,
+    this.title,
+    this.buttonText,
+    this.callback,
+    this.popCallback,
+    this.titleColor = kcPrimaryColor,
+    this.isCancel,
+    this.isPopNext,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +67,17 @@ class SuccessDialog extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            isCancel! ?  TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel',
-                    style: stNoColor50014.copyWith(color: kcBlack)),
-              ):const SizedBox.shrink(),
+              isCancel!
+                  ? TextButton(
+                      onPressed: isPopNext!
+                          ? popCallback
+                          : () {
+                              Navigator.pop(context);
+                            },
+                      child: Text('Cancel',
+                          style: stNoColor50014.copyWith(color: kcBlack)),
+                    )
+                  : const SizedBox.shrink(),
               const SizedBox(width: 40),
               GestureDetector(
                 onTap: callback,

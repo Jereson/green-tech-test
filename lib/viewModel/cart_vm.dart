@@ -6,6 +6,7 @@ import 'package:green_tech_app/model/my_cart_model.dart';
 import 'package:green_tech_app/services/cart_service.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
 import 'package:green_tech_app/viewModel/base_view_model.dart';
+import 'package:green_tech_app/viewModel/product_view_model.dart';
 import 'package:green_tech_app/views/screens/payment_screen.dart';
 import 'package:green_tech_app/views/widgets/custom_dialog.dart';
 import 'package:green_tech_app/views/widgets/custom_loader.dart';
@@ -104,29 +105,22 @@ class CartViewModel extends BaseViewModel {
     final result = await cartService.removeProctFromCart(productId, quantity);
 
     if (!result.hasError!) {
-      if (!mounted) return;
-      progressDialog.dismiss();
-      showSuccess(
-          context: context,
-          title: 'Item removed from cart succssfully',
-          btnText: 'Done',
-          textColor: kcPrimaryColor,
-          callback: () {
-            Navigator.pop(context);
-          });
-    } else {
       await getMyCart();
       if (!mounted) return;
       progressDialog.dismiss();
-      showSuccess(
-        context: context,
-        title: result.error.toString(),
-        btnText: 'Try again',
-        textColor: kcE51414,
-        callback: () {
-          Navigator.pop(context);
-        },
-      );
+      flushbar(
+          context: context,
+          title: 'Success',
+          message: 'Item removed from cart succssfully',
+          isSuccess: true);
+    } else {
+      if (!mounted) return;
+      progressDialog.dismiss();
+      flushbar(
+          context: context,
+          title: 'Failed',
+          message: 'Operation failed, try again',
+          isSuccess: false);
     }
   }
 
@@ -199,6 +193,7 @@ class CartViewModel extends BaseViewModel {
         textColor: kcE51414,
         callback: () {
           Navigator.pop(context);
+          Navigator.pop(context);
         },
       );
     }
@@ -233,6 +228,11 @@ class CartViewModel extends BaseViewModel {
         title: result.error.toString(),
         btnText: 'Try again',
         textColor: kcE51414,
+        isPopNext: true,
+        popCallback: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
         callback: () {
           Navigator.pop(context);
         },
@@ -271,6 +271,43 @@ class CartViewModel extends BaseViewModel {
           title: 'Error',
           message: 'Error occured',
           isSuccess: false);
+    }
+  }
+
+  Future<void> topUp(BuildContext context, num amount,
+      [bool mounted = true]) async {
+    CustomProgressDialog progressDialog = CustomProgressDialog(context,
+        blur: 2, loadingWidget: const CustomLoader(), dismissable: false);
+    progressDialog.show();
+    final result = await cartService.topUp(amount);
+
+    if (!result.hasError!) {
+      await getIt.get<ProductViewModel>().catchedUserDetail();
+      if (!mounted) return;
+      progressDialog.dismiss();
+      showSuccess(
+        context: context,
+        title: 'Transaction completed',
+        btnText: 'Done',
+        textColor: kcE51414,
+        callback: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+      );
+    } else {
+      await getMyCart();
+      if (!mounted) return;
+      progressDialog.dismiss();
+      showSuccess(
+        context: context,
+        title: result.error.toString(),
+        btnText: 'Try again',
+        textColor: kcE51414,
+        callback: () {
+          topUp(context, amount);
+        },
+      );
     }
   }
 

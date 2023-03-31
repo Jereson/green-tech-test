@@ -78,7 +78,12 @@ class _CartSummaryState extends State<CartSummary> {
                               Icons.delete_outline,
                               color: kcPrimaryColor,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              getIt.get<CartViewModel>().removeProctFromCart(
+                                  context,
+                                  widget.products!.id!.id!,
+                                  widget.products!.quantity!);
+                            },
                           ),
                           const Spacer(),
                           SizedBox(
@@ -174,6 +179,7 @@ class OperationModal extends StatefulWidget {
 
 class _OperationModalState extends State<OperationModal> {
   final formKey = GlobalKey<FormState>();
+  final quantyController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -200,6 +206,7 @@ class _OperationModalState extends State<OperationModal> {
                   Text('${widget.operationType} item'.toUpperCase()),
                   const SizedBox(height: 10),
                   TextFormField(
+                    controller: quantyController,
                     decoration: borderTextInputDecoration.copyWith(
                         hintText: 'Enter amount to ${widget.operationType}'),
                     keyboardType: TextInputType.number,
@@ -226,14 +233,23 @@ class _OperationModalState extends State<OperationModal> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: kcPrimaryColor, // Background color
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             if (!formKey.currentState!.validate()) return;
                             if (widget.operationType == 'remove') {
-                              getIt.get<CartViewModel>().removeProctFromCart(
-                                  context, widget.productId, widget.quantity);
+                              await getIt
+                                  .get<CartViewModel>()
+                                  .removeProctFromCart(
+                                      context,
+                                      widget.productId,
+                                      int.tryParse(quantyController.text)!);
+
+                              setState(() => quantyController.clear());
                             } else {
-                              getIt.get<CartViewModel>().addProductToCart(
-                                  context, widget.productId, widget.quantity);
+                              await getIt.get<CartViewModel>().addProductToCart(
+                                  context,
+                                  widget.productId,
+                                  int.tryParse(quantyController.text)!);
+                              setState(() => quantyController.clear());
                             }
                           },
                           child: Text(
