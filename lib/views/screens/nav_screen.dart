@@ -5,6 +5,7 @@ import 'package:green_tech_app/utils/text_style_utils.dart';
 import 'package:green_tech_app/views/screens/account_screen.dart';
 import 'package:green_tech_app/views/screens/home_screen.dart';
 import 'package:green_tech_app/views/screens/my_cart_screen.dart';
+import 'package:green_tech_app/views/screens/transaction_screen.dart';
 
 class BottomNavPage extends StatefulWidget {
   static const routeName = 'bottom-nav';
@@ -77,9 +78,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
   List<Widget> bodyItems = const [
     HomeScreen(),
     MyCartScreen(),
-    Center(
-      child: Text('Transaction'),
-    ),
+   TransactionScreen(),
    AccountScreen(),
   ];
 }

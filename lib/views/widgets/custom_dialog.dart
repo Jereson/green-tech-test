@@ -2,34 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
 import 'package:green_tech_app/utils/text_style_utils.dart';
 
-showSuccess({ required BuildContext?  context, required String title, required String btnText, required VoidCallback callback, Color? textColor}) {
+showSuccess(
+    {required BuildContext? context,
+    required String title,
+    required String btnText,
+    required VoidCallback callback,
+    bool isCancel=true,
+    Color? textColor}) {
   showDialog(
       context: context!,
       builder: (context) {
-        return  Dialog(
+        return Dialog(
           child: SuccessDialog(
             title: title,
             buttonText: btnText,
             callback: callback,
+            isCancel: isCancel,
             titleColor: textColor,
           ),
         );
       });
 }
 
-
-
 class SuccessDialog extends StatelessWidget {
   final String? title;
   final String? buttonText;
   final Color? titleColor;
   final VoidCallback? callback;
+  final bool? isCancel;
   const SuccessDialog(
       {Key? key,
       this.title,
       this.buttonText,
       this.callback,
-      this.titleColor = kcPrimaryColor})
+      this.titleColor = kcPrimaryColor, this.isCancel})
       : super(key: key);
 
   @override
@@ -48,11 +54,11 @@ class SuccessDialog extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
+            isCancel! ?  TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('Cancel',
                     style: stNoColor50014.copyWith(color: kcBlack)),
-              ),
+              ):const SizedBox.shrink(),
               const SizedBox(width: 40),
               GestureDetector(
                 onTap: callback,
@@ -64,6 +70,7 @@ class SuccessDialog extends StatelessWidget {
                         color: kcPrimaryColor,
                         borderRadius: BorderRadius.circular(8)),
                     child: Text(buttonText!,
+                        textAlign: TextAlign.center,
                         style: stNoColor50014.copyWith(color: kcWhite))),
               )
             ],

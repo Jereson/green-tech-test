@@ -47,7 +47,13 @@ class ProfileViewModel extends BaseViewModel {
     final result = await profileService.deletUser(cachedUserDetail!.data!.id!);
     progressDialog.dismiss();
     if (!result.hasError!) {
+      ///Remove all cached user details
       await getIt.get<LocalStorage>().removeUserToken();
+      await getIt.get<LocalStorage>().removeUserEmail();
+      await getIt.get<LocalStorage>().removeUserPhone();
+      await getIt.get<LocalStorage>().removeUserId();
+      await getIt.get<LocalStorage>().removeUserName();
+
       if (context.mounted) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(SigninScreen.routeName, (route) => false);

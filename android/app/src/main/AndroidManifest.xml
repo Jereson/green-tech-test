@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.green_tech_app">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="green_tech_app"
+        android:label="Green Tech"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

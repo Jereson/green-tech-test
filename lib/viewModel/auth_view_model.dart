@@ -57,9 +57,10 @@ class AuthViewModel extends BaseViewModel {
     progressDialog.dismiss();
     if (!result.hasError!) {
    await  getIt.get<LocalStorage>().saveUserToken(result.data!.token!);
+
       if (!mounted) return;
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(BottomNavPage.routeName, (route) => false);
+          .pushNamedAndRemoveUntil(BottomNavPage.routeName,  (route) => false);
     } else {
       if (!mounted) return;
       flushbar(

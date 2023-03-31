@@ -94,6 +94,37 @@ class BaseDatasource {
     return _processRequest(request);
   }
 
+  //   Future<ApiResponse<Map<String, dynamic>>> sendPut(
+  //     {@required String? endpoint,
+  //     @required Map<String, dynamic>? payload,
+  //     bool useToken = true}) async {
+  //   final url = _url(endpoint!);
+  //   final body = jsonEncode(payload);
+  //   final request = http.put(
+  //     url,
+  //     body: body,
+  //     headers: useToken ? jsonHeaders : jsonHeadersWithoutToken,
+  //   );
+  //   debugPrint('REQUEST -- $url -- $payload');
+  //   return _processRequest(request);
+  // }
+
+    Future<ApiResponse<Map<String, dynamic>>> sendPut(
+      {String? endpoint,
+      Map<String, dynamic>? payload,
+      bool useToken = true}) async {
+    final url = _url(endpoint!);
+    final body = jsonEncode(payload);
+    final request = http.put(
+      url,
+      body: body,
+      headers: useToken ? jsonHeaders : jsonHeadersWithoutToken,
+    );
+    debugPrint('REQUEST -- $url -- $payload');
+    return _processRequest(request);
+  }
+
+
   Failure _checkForError(int statusCode, data) {
     String? returnedMessage;
     // returnedMessage = '';

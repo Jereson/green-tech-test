@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
-import 'package:green_tech_app/utils/text_style_utils.dart';
 
 const underline =
     UnderlineInputBorder(borderSide: BorderSide(color: kcECECEC, width: 1.4));

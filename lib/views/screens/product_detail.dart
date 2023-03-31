@@ -1,7 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:green_tech_app/getit.dart';
+import 'package:green_tech_app/utils/base_view_builder.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
-import 'package:green_tech_app/utils/image_utils.dart';
+import 'package:green_tech_app/viewModel/cart_vm.dart';
+import 'package:green_tech_app/viewModel/product_view_model.dart';
+import 'package:green_tech_app/views/widgets/custom_dialog.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   static const routeName = '/product-detail';
@@ -14,8 +20,6 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  int _counter = 1;
-
   @override
   void initState() {
     super.initState();
@@ -48,188 +52,276 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       fontSize: 12.0,
       color: Color(0xFF909090),
     );
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        actions: <Widget>[
-          Container(
-              margin: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                  color: kcPrimaryColor,
-                  borderRadius: BorderRadius.circular(10.0)),
-              // height: 30,
-              width: 54,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Icon(Icons.shopping_cart),
-                  Text(
-                    '6',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(top: 10.0),
-                alignment: Alignment.center,
-                height: 140.0,
-                width: double.infinity,
-                child: Image.asset(
-                  imgLogo,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              SizedBox(height: 18.0),
-              Text(
-                'rjgnrjngjtrnghjt',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                'mdkrgh erugh  uerfhguher ghrug urgrrhgyre g ra',
-                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
-              ),
+    final productData = getIt.get<ProductViewModel>().selectedProduct;
 
-              SizedBox(height: 22.0),
-              Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Color(0xFF909090),
-                    radius: 23.0,
-                  ),
-                  SizedBox(width: 18.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'SOLD BY',
-                        style: TextStyle(
-                          color: Color(0xFF909090),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
+    return BaseViewBuilder<CartViewModel>(
+        model: getIt(),
+        initState: (init) async {
+          await init.resetDataOnInit();
+          init.setInitTotalPrice(productData!.price!);
+        },
+        builder: (cVm, _) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0.0,
+              actions: [
+                Container(
+                    margin: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                        color: kcPrimaryColor,
+                        borderRadius: BorderRadius.circular(10.0)),
+                    // height: 30,
+                    width: 54,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(Icons.shopping_cart),
+                        Text(
+                          '${cVm.cartCount}',
+                          style: TextStyle(color: Colors.white),
                         ),
+                      ],
+                    ))
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      alignment: Alignment.center,
+                      height: 140.0,
+                      width: double.infinity,
+                      child: CachedNetworkImage(
+                        imageUrl: productData!.image!,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                const CupertinoActivityIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.broken_image),
+                        fit: BoxFit.cover,
                       ),
-                      const Text(
-                        'Green Tech Comm',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                        ),
+                    ),
+                    const SizedBox(height: 18.0),
+                    Text(
+                      productData.name!,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                    Text(
+                      productData.description!,
+                      style: TextStyle(
+                          fontSize: 14.0, fontWeight: FontWeight.w400),
+                    ),
 
-              SizedBox(height: 22.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                        margin: const EdgeInsets.only(right: 6.0),
-                        height: 40.0,
-                        width: 105.0,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFF909090),
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
+                    SizedBox(height: 22.0),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Color(0xFF909090),
+                          radius: 23.0,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            InkWell(
-                              // onTap: () => ,
-                              child: Icon(
-                                Icons.remove,
-                                color: _counter == 0
-                                    ? Colors.grey.withOpacity(0.4)
-                                    : Colors.black,
+                        SizedBox(width: 18.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'SOLD BY',
+                              style: TextStyle(
+                                color: Color(0xFF909090),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
                               ),
                             ),
                             Text(
-                              '$_counter',
+                              productData.brand!.toUpperCase(),
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18.0),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.0,
+                              ),
                             ),
-                            InkWell(
-                              // onTap: () => increaseQuatityadPrice(),
-                              child: Icon(Icons.add),
+                          ],
+                        )
+                      ],
+                    ),
+
+                    const SizedBox(height: 22.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 4.0, right: 4.0),
+                              margin: const EdgeInsets.only(right: 6.0),
+                              height: 40.0,
+                              // width: 120.0,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color(0xFF909090),
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        cVm.decreamentItemCount(
+                                            productData.price!);
+                                      },
+                                      icon: Icon(
+                                        Icons.remove,
+                                        color: cVm.itemCount == 0
+                                            ? Colors.grey.withOpacity(0.4)
+                                            : Colors.black,
+                                      )),
+                                  // InkWell(
+                                  //   // onTap: () => ,
+                                  //   child: Icon(
+                                  //     Icons.remove,
+                                  //     color: cVm.itemCount == 0
+                                  //         ? Colors.grey.withOpacity(0.4)
+                                  //         : Colors.black,
+                                  //   ),
+                                  // ),
+                                  Text(
+                                    '${cVm.itemCount}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        cVm.increamentItemCount(
+                                            productData.price!);
+                                      },
+                                      icon: Icon(Icons.add)),
+                                ],
+                              ),
+                            ),
+                            const Text(
+                              'Pack(s)',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                color: Color(0xFF909090),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      const Text(
-                        'Pack(s)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0,
-                          color: Color(0xFF909090),
-                        ),
-                      ),
-                    ],
-                  ),
 
-                  //Product Price
-                  Text(
-                    '\$8494',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w600,
+                        //Product Price
+                        Text(
+                          '[N${productData.price}]\n N${cVm.totalPrice}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-              SizedBox(height: 30.0),
-              const Text(
-                'PRODUCT DETAILS',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.0,
-                  color: Color(0xFF909090),
-                ),
-              ),
-              SizedBox(height: 6.0),
-              //Pack Size, Product in Row
-              Container(
-                width: MediaQuery.of(context).size.width * .78,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //Prize Size
+                    SizedBox(height: 30.0),
+                    const Text(
+                      'PRODUCT DETAILS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13.0,
+                        color: Color(0xFF909090),
+                      ),
+                    ),
+                    SizedBox(height: 6.0),
+                    //Pack Size, Product in Row
+                    Container(
+                      width: MediaQuery.of(context).size.width * .78,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          //Prize Size
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.label_outline,
+                                  color: kcPrimaryColor,
+                                  size: 32.0,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'PACK SIZE',
+                                    style: _headings,
+                                  ),
+                                  Text(
+                                    '${cVm.itemCount}',
+                                    style: _itemSize,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+
+                          //Product ID
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  Icons.dashboard,
+                                  color: kcPrimaryColor,
+                                  size: 40.0,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('PRODUCT ID', style: _headings),
+                                  Text(
+                                    productData.id!.substring(0, 9),
+                                    overflow: TextOverflow.ellipsis,
+                                    // maxLines: 2,
+                                    style: _itemSize,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    //Constituents
+                    const SizedBox(height: 8.0),
                     Row(
-                      children: <Widget>[
+                      children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: Icon(
-                            Icons.label_outline,
+                            Icons.label,
                             color: kcPrimaryColor,
                             size: 32.0,
                           ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
+                          children: [
                             const Text(
-                              'PACK SIZE',
+                              'BRAND',
                               style: _headings,
                             ),
                             Text(
-                              '2',
+                              productData.brand!.toUpperCase(),
                               style: _itemSize,
                             )
                           ],
@@ -237,130 +329,78 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ],
                     ),
 
-                    //Product ID
+                    //Dispensed
+                    const SizedBox(height: 8.0),
                     Row(
-                      children: <Widget>[
+                      children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: Icon(
-                            Icons.dashboard,
+                            Icons.delete_outline,
                             color: kcPrimaryColor,
-                            size: 40.0,
+                            size: 35.0,
                           ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            const Text('PRODUCT ID', style: _headings),
+                          children: [
+                            const Text('DISPENSE', style: _headings),
                             Text(
-                              'nejfnrjgr',
+                              'Go back',
                               style: _itemSize,
                             )
                           ],
                         ),
                       ],
                     ),
+
+                    const SizedBox(height: 14.0),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'You are adding ${cVm.itemCount} pack of ${productData.name} worth the total price of ${cVm.totalPrice} ',
+                        style: TextStyle(color: Color(0xFF909090)),
+                      ),
+                    ),
                   ],
                 ),
               ),
-
-              //Constituents
-              SizedBox(height: 8.0),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(
-                      Icons.label,
-                      color: kcPrimaryColor,
-                      size: 32.0,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: GestureDetector(
+              onTap: () {
+               
+                cVm.addProductToCart(context, productData.id!,cVm.itemCount,);
+              },
+              child: Container(
+                height: 40.0,
+                width: MediaQuery.of(context).size.width * .7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: kcPrimaryColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add_shopping_cart,
+                      color: Colors.white,
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'CONSTITUENTS',
-                        style: _headings,
+                    SizedBox(width: 10.0),
+                    const Text(
+                      'Add to cart',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                       ),
-                      Text(
-                        'nejeiu enrj',
-                        style: _itemSize,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-
-              //Dispensed
-              SizedBox(height: 8.0),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4.0),
-                    child: Icon(
-                      Icons.delete_outline,
-                      color: kcPrimaryColor,
-                      size: 35.0,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('DISPENSE', style: _headings),
-                      Text(
-                        'ejnejrijri4',
-                        style: _itemSize,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 14.0),
-              Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: Text(
-                  '1 shirt of ehbfhrbg  contain 39 ',
-                  style: TextStyle(color: Color(0xFF909090)),
+                    )
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: InkWell(
-        onTap: () {
-          
-        },
-        child: Container(
-          height: 40.0,
-          width: MediaQuery.of(context).size.width * .7,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0),
-            color: kcPrimaryColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.add_shopping_cart,
-                color: Colors.white,
-              ),
-              SizedBox(width: 10.0),
-              const Text(
-                'Add to cart',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }
