@@ -5,7 +5,9 @@ import 'package:green_tech_app/utils/base_view_builder.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
 import 'package:green_tech_app/utils/form_style.dart';
 import 'package:green_tech_app/utils/text_style_utils.dart';
+import 'package:green_tech_app/viewModel/cart_vm.dart';
 import 'package:green_tech_app/viewModel/product_view_model.dart';
+import 'package:green_tech_app/views/screens/payment_screen.dart';
 import 'package:green_tech_app/views/screens/product_detail.dart';
 import 'package:green_tech_app/views/widgets/custom_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,25 +39,78 @@ class HomeScreen extends StatelessWidget {
             init.getAllProduct();
           },
           builder: (pVm, _) {
-            return ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(20.0),
-                children: [
-                  TextField(
-                    decoration: borderTextInputDecoration.copyWith(
-                        hintText: 'Type here to search'),
-                  ),
-                  const SizedBox(height: 20),
-                  pVm.cachedProductModel == null
-                      ? const CustomLoader()
-                      : GridView.builder(
+            return pVm.cachedProductModel == null
+                ? const CustomLoader()
+                : ListView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(20.0),
+                    children: [
+                        Row(
+                          children: [
+                            Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 15),
+                                // height: 50,
+                                decoration: BoxDecoration(
+                                    color: kcPrimaryColor.withOpacity(0.1)),
+                                child: Text(
+                                  'N${pVm.userDetailModel!.data!.balance!}',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                )),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                getIt
+                                    .get<CartViewModel>()
+                                    .initiatePayment(context, '3000');
+                              },
+                              child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 15),
+                                  // height: 50,
+                                  decoration: BoxDecoration(
+                                      color: kcPrimaryColor.withOpacity(0.1)),
+                                  child: Text(
+                                    'Top up [N3000]',
+                                    style: TextStyle(
+                                        color: kcPrimaryColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: pVm.searchController,
+                          decoration: borderTextInputDecoration.copyWith(
+                              hintText: 'Type here to search'),
+                          onTap: () => pVm.changeSearchVisibilty(true, ''),
+                          onChanged: (val) {
+                            if (val.trim().isEmpty) {
+                              pVm.changeSearchVisibilty(true, '');
+                              return;
+                            }
+                            pVm.changeSearchVisibilty(false, val.trim());
+                          },
+                          onTapOutside: (val) {
+                            pVm.searchController.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        GridView.builder(
                           shrinkWrap: true,
-                          itemCount:
-                              pVm.cachedProductModel!.productData!.length,
+                          // itemCount:
+                          //     pVm.cachedProductModel!.productData!.length,
+                          itemCount: pVm.getAllProductList()!.length,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final product =
-                                pVm.cachedProductModel!.productData![index];
+                            final product = pVm.getAllProductList()![index];
+                            // pVm.cachedProductModel!.productData![index];
                             return GestureDetector(
                               onTap: () {
                                 pVm.setSelectProduct(product);
@@ -100,7 +155,7 @@ class HomeScreen extends StatelessWidget {
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: <Widget>[
+                                        children: [
                                           Text(
                                             product.name!,
                                             style: TextStyle(
@@ -124,18 +179,18 @@ class HomeScreen extends StatelessWidget {
 
                                     //Product price
                                     Container(
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                           top: 12.0, right: 10.0, bottom: 8.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
-                                        children: <Widget>[
+                                        children: [
                                           Container(
                                             alignment: Alignment.center,
                                             height: 26.0,
                                             width: 70.0,
                                             decoration: BoxDecoration(
-                                              color: Color(0xFF909090),
+                                              color: const Color(0xFF909090),
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                             ),
@@ -157,14 +212,14 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 3.8 / 6,
+                            childAspectRatio: 4 / 6,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                           ),
                         )
-                ]);
+                      ]);
           }),
     );
   }

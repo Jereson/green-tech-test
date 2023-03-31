@@ -1,15 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:green_tech_app/getit.dart';
 import 'package:green_tech_app/model/product_model.dart';
+import 'package:green_tech_app/model/user_detail_model.dart';
 import 'package:green_tech_app/services/base_services/service_const.dart';
 import 'package:green_tech_app/services/prodcut_service.dart';
 import 'package:green_tech_app/services/profile_service.dart';
 import 'package:green_tech_app/utils/local_storage.dart';
 import 'package:green_tech_app/viewModel/base_view_model.dart';
 
-extension SearchTransaction on List<ProductData> {
+extension SearchTerm on List<ProductData> {
   List<ProductData> filterSearch(String searchTerm) {
     return where(
-            (val) => val.name.toString().contains(searchTerm.toLowerCase()))
+            (val) => val.name!.toLowerCase().contains(searchTerm.toLowerCase()))
         .toList();
   }
 }
@@ -18,7 +20,16 @@ class ProductViewModel extends BaseViewModel {
   final productService = getIt.get<ProductService>();
   ProductModel? cachedProductModel;
   ProductData? selectedProduct;
+  UserDetailModel? userDetailModel;
+
+  // List<ProductData> productList =[];
   final profileService = getIt.get<ProfileService>();
+
+  bool searchEmpty = true;
+  String searchTerm = '';
+  bool isSearchEmpty() => searchTerm.trim().isEmpty;
+
+  final searchController = TextEditingController();
 
   Future<void> getAllProduct() async {
     final result = await productService.getAllProduct();
@@ -44,16 +55,13 @@ class ProductViewModel extends BaseViewModel {
           .get<LocalStorage>()
           .saveUserPhone('${result.data!.data!.phone!}');
       await getIt.get<LocalStorage>().saveUserName(result.data!.data!.name!);
+      userDetailModel = result.data!;
       setState();
       logger.d(result.data!.data!.balance!);
     }
   }
 
-  bool searchEmpty = true;
-  String searchTerm = '';
-  bool isSearchEmpty() => searchTerm.trim().isEmpty;
-
-  List<ProductData>? getAllTxn() => searchEmpty
+  List<ProductData>? getAllProductList() => searchEmpty
       ? cachedProductModel!.productData
       : cachedProductModel!.productData!.filterSearch(searchTerm);
 

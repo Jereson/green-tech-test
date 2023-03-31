@@ -3,6 +3,7 @@ import 'package:green_tech_app/views/screens/auth/signin_screen.dart';
 import 'package:green_tech_app/views/screens/auth/signup_screen.dart';
 import 'package:green_tech_app/views/screens/edit_profile.dart';
 import 'package:green_tech_app/views/screens/nav_screen.dart';
+import 'package:green_tech_app/views/screens/payment_screen.dart';
 import 'package:green_tech_app/views/screens/product_detail.dart';
 
 final routes = <String, WidgetBuilder>{
@@ -10,6 +11,7 @@ final routes = <String, WidgetBuilder>{
   SigninScreen.routeName:(_) =>const SigninScreen(),
   SignupScreen.routeName:(_) =>const SignupScreen(),
   ProductDetailScreen.routeName:(_)=>const ProductDetailScreen(),
-  EditProfileScreen.routeName:(_)=>const EditProfileScreen()
+  EditProfileScreen.routeName:(_)=>const EditProfileScreen(),
+  PaymentScreen.routeName:(_)=>const PaymentScreen()
  
 };

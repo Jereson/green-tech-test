@@ -254,6 +254,8 @@ class CartViewModel extends BaseViewModel {
         authorizedUrl = result.data!.authorizationUrl;
         referalCode = result.data!.reference;
         setState();
+        if (!mounted) return;
+        Navigator.of(context).pushNamed(PaymentScreen.routeName);
       } else {
         if (!mounted) return;
         flushbar(

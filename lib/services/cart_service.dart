@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:green_tech_app/getit.dart';
 import 'package:green_tech_app/model/check_out_model.dart';
 import 'package:green_tech_app/model/checkout_order_model.dart';
 import 'package:green_tech_app/model/generic_response.dart';
 import 'package:green_tech_app/model/initiate_payment_model.dart';
 import 'package:green_tech_app/model/my_cart_model.dart';
-import 'package:green_tech_app/model/order_model.dart';
 import 'package:green_tech_app/services/base_services/api_responss.dart';
 import 'package:green_tech_app/services/base_services/base_data_source.dart';
 import 'package:green_tech_app/services/base_services/service_const.dart';
@@ -48,19 +46,17 @@ class CartServices extends BaseDatasource {
     return response.transform((data) => CheckOutModel.fromJson(data));
   }
 
-
+  
   Future<ApiResponse<CheckoutOrderModel>> getOrder(String orderId) async {
     final response = await sendGet(endpoint: 'orders/$orderId');
     return response.transform((data) => CheckoutOrderModel.fromJson(data));
   }
 
+
    Future<ApiResponse<GenericResponse>> proceedPayment(String orderId) async {
-    final response = await sendGet(endpoint: 'orders/$orderId/process-payment');
+    final response = await sendPut(endpoint: 'orders/$orderId/process-payment');
     return response.transform((data) => GenericResponse.fromJson(data));
   }
-
-
-
 
 
 //This is effect from flutterwave payment checkout
