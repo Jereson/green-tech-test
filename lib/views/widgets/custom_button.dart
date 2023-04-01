@@ -42,35 +42,13 @@ class CustomButtonWidget extends StatelessWidget {
                     title,
                     style: btnStyle,
                   ),
-            // Text(
-            //   'SIGN IN',
-            //   style: TextStyle(
-            //       color: kcWhite,
-            //       fontSize: 21,
-            //       fontWeight: FontWeight.w500),
-            // ),
-            Icon(
+            const Icon(
               Icons.arrow_forward,
               color: kcWhite,
             )
           ],
         ),
       ),
-
-      // Container(
-      //   alignment: Alignment.center,
-      //   margin: EdgeInsets.symmetric(horizontal: isPadding ? 40 : 0),
-      //   height: height ?? 50,
-      //   width: width ?? double.infinity,
-      //   decoration: BoxDecoration(
-      //       color: color, borderRadius: BorderRadius.circular(10)),
-      //   child: isLoading
-      //       ? const SpinKitWave(color: kcWhite, size: 40)
-      //       : Text(
-      //           title,
-      //           style: btnStyle,
-      //         ),
-      // ),
     );
   }
 }

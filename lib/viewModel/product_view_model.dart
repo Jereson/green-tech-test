@@ -8,6 +8,7 @@ import 'package:green_tech_app/services/profile_service.dart';
 import 'package:green_tech_app/utils/local_storage.dart';
 import 'package:green_tech_app/viewModel/base_view_model.dart';
 
+//Impelent searching feature
 extension SearchTerm on List<ProductData> {
   List<ProductData> filterSearch(String searchTerm) {
     return where(
@@ -49,6 +50,7 @@ class ProductViewModel extends BaseViewModel {
     final result = await profileService.getUserDetail();
 
     if (!result.hasError!) {
+      //Catch basic user details
       await getIt.get<LocalStorage>().saveUserId(result.data!.data!.id!);
       await getIt.get<LocalStorage>().saveUserEmail(result.data!.data!.email!);
       await getIt
@@ -61,6 +63,7 @@ class ProductViewModel extends BaseViewModel {
     }
   }
 
+//Get searched resul and unsearch into single
   List<ProductData>? getAllProductList() => searchEmpty
       ? cachedProductModel!.productData
       : cachedProductModel!.productData!.filterSearch(searchTerm);

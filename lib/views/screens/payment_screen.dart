@@ -69,7 +69,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ''');
           },
           onNavigationRequest: (NavigationRequest request) {
-            print('The payment ${request.url}');
+            logger.d('The payment ${request.url}');
             // if (request.url.startsWith('https://www.youtube.com/')) {
             //   debugPrint('blocking navigation to ${request.url}');
             //   return NavigationDecision.prevent;

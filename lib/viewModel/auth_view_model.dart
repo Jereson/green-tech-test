@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_tech_app/getit.dart';
 import 'package:green_tech_app/services/auth_service.dart';
-import 'package:green_tech_app/services/base_services/service_const.dart';
 import 'package:green_tech_app/utils/local_storage.dart';
 import 'package:green_tech_app/viewModel/base_view_model.dart';
 import 'package:green_tech_app/views/screens/auth/signin_screen.dart';
@@ -56,11 +55,11 @@ class AuthViewModel extends BaseViewModel {
     );
     progressDialog.dismiss();
     if (!result.hasError!) {
-   await  getIt.get<LocalStorage>().saveUserToken(result.data!.token!);
+      await getIt.get<LocalStorage>().saveUserToken(result.data!.token!);
 
       if (!mounted) return;
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(BottomNavPage.routeName,  (route) => false);
+          .pushNamedAndRemoveUntil(BottomNavPage.routeName, (route) => false);
     } else {
       if (!mounted) return;
       flushbar(
@@ -70,6 +69,4 @@ class AuthViewModel extends BaseViewModel {
           isSuccess: false);
     }
   }
-
-  
 }

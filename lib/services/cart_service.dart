@@ -39,48 +39,38 @@ class CartServices extends BaseDatasource {
     return response.transform((data) => MyCartModel.fromJson(data));
   }
 
-
   Future<ApiResponse<CheckOutModel>> checkoutCart() async {
     final userId = getIt.get<LocalStorage>().getUserId();
     final response = await sendGet(endpoint: 'users/$userId/carts/checkout');
     return response.transform((data) => CheckOutModel.fromJson(data));
   }
 
-  
   Future<ApiResponse<CheckoutOrderModel>> getOrder(String orderId) async {
     final response = await sendGet(endpoint: 'orders/$orderId');
     return response.transform((data) => CheckoutOrderModel.fromJson(data));
   }
 
-
-   Future<ApiResponse<GenericResponse>> proceedPayment(String orderId) async {
-    final response = await sendPut(endpoint: 'orders/$orderId/process-payment',payload: {});
+  Future<ApiResponse<GenericResponse>> proceedPayment(String orderId) async {
+    final response =
+        await sendPut(endpoint: 'orders/$orderId/process-payment', payload: {});
     return response.transform((data) => GenericResponse.fromJson(data));
   }
 
-   Future<ApiResponse<GenericResponse>> topUp(num amount) async {
-       final userId = getIt.get<LocalStorage>().getUserId();
-    final response = await sendPut(endpoint: 'users/$userId/top-up', payload: {
-      'amount':amount
-    });
+  Future<ApiResponse<GenericResponse>> topUp(num amount) async {
+    final userId = getIt.get<LocalStorage>().getUserId();
+    final response = await sendPut(
+        endpoint: 'users/$userId/top-up', payload: {'amount': amount});
     return response.transform((data) => GenericResponse.fromJson(data));
   }
-
-
-
-
-
-
 
 //This is effect from flutterwave payment checkout
   Future<Object> initiatePayment(String? amount) async {
     try {
-      const uri = 'https://api.paystack.co/transaction/initialize';
       final response = await http.post(
-        Uri.parse(uri),
+        Uri.parse(flutterwaveInitPaymentUrl),
         headers: <String, String>{
           'Authorization':
-              'Bearer sk_test_509502af41592489384d9225bfa6984aded7da3f',
+              'Bearer $flutterwaveTestKey',
           'Content-Type': 'application/json',
         },
         body: jsonEncode(<String, dynamic>{

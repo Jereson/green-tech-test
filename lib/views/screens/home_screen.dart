@@ -8,7 +8,6 @@ import 'package:green_tech_app/utils/string_util.dart';
 import 'package:green_tech_app/utils/text_style_utils.dart';
 import 'package:green_tech_app/viewModel/cart_vm.dart';
 import 'package:green_tech_app/viewModel/product_view_model.dart';
-import 'package:green_tech_app/views/screens/payment_screen.dart';
 import 'package:green_tech_app/views/screens/product_detail.dart';
 import 'package:green_tech_app/views/widgets/custom_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           'GreenTech Mall',
           style: stBlack50016.copyWith(color: kcWhite),
         ),
-        actions: [
+        actions: const [
           CircleAvatar(
             backgroundColor: Colors.grey,
           )
@@ -51,20 +50,18 @@ class HomeScreen extends StatelessWidget {
                             Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30, vertical: 15),
-                                // height: 50,
                                 decoration: BoxDecoration(
                                     color: kcPrimaryColor.withOpacity(0.1)),
                                 child: Text(
                                   'N${pVm.userDetailModel!.data!.balance!}'
                                       .replaceAllMapped(reg, addCommaToString),
-                                  style: TextStyle(
-                                      color: kcPrimaryColor,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
+                                  style: stPrimaryColor60015,
                                 )),
                             const Spacer(),
                             GestureDetector(
                               onTap: () {
+                                //Top with 3000 naira
+                                //This feature is testing crediti card
                                 getIt
                                     .get<CartViewModel>()
                                     .initiatePayment(context, '3000');
@@ -72,15 +69,11 @@ class HomeScreen extends StatelessWidget {
                               child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 30, vertical: 15),
-                                  // height: 50,
                                   decoration: BoxDecoration(
                                       color: kcPrimaryColor.withOpacity(0.1)),
-                                  child: Text(
+                                  child: const Text(
                                     'Top up [N3000]',
-                                    style: TextStyle(
-                                        color: kcPrimaryColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
+                                    style: stPrimaryColor60015,
                                   )),
                             ),
                           ],
@@ -143,10 +136,6 @@ class HomeScreen extends StatelessWidget {
                                             const Icon(Icons.broken_image),
                                         fit: BoxFit.cover,
                                       ),
-                                      // Image.asset(
-                                      //   imgLogo,
-                                      //   fit: BoxFit.contain,
-                                      // ),
                                     ),
 
                                     //Product Detial
@@ -160,11 +149,7 @@ class HomeScreen extends StatelessWidget {
                                         children: [
                                           Text(
                                             product.name!,
-                                            style: TextStyle(
-                                              fontFamily: 'ProximaNova',
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 14.0,
-                                            ),
+                                            style:stBlack70014
                                           ),
                                           Text(product.brand!,
                                               style: st90909030012.copyWith(
@@ -198,11 +183,7 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             child: Text(
                                               'N${product.price}',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily: 'ProximaNova',
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.w400),
+                                              style: stWhite40012
                                             ),
                                           ),
                                         ],

@@ -49,64 +49,54 @@ class _AccountScreenState extends State<AccountScreen> {
                         SizedBox(
                           height: 400,
                           child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.all(20),
-                              itemCount: settingData.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () => index == 0
-                                      ? Navigator.of(context).pushNamed(
-                                          settingData[index].routeName!)
-                                      : index == 1
-                                          ? showSuccess(
-                                              context: context,
-                                              title:
-                                                  'Are you sure you want to logout?',
-                                              btnText: 'Logout',
-                                              textColor: kcE51414,
-                                              callback: () {
-                                                pVm.logout(context);
-                                              })
-                                          : null,
-
-                                  // index == 2
-                                  //     ? showSuccess(
-                                  //         context: context,
-                                  //         title: 'Are you sure you want to logout?',
-                                  //         btnText: 'Logout',
-                                  //         textColor: kcE51414,
-                                  //         callback: () {
-                                  //           pVm.logout(context);
-                                  // })
-
-                                  child: Container(
-                                    color: Colors.white,
-                                    margin: const EdgeInsets.only(bottom: 30),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: kcPrimaryColor
-                                                  .withOpacity(0.1)),
-                                          child: Icon(
-                                            settingData[index].iconn,
-                                            color: kcPrimaryColor,
-                                          ),
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(20),
+                            itemCount: settingData.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () => index == 0
+                                    ? Navigator.of(context).pushNamed(
+                                        settingData[index].routeName!)
+                                    : index == 1
+                                        ? showSuccess(
+                                            context: context,
+                                            title:
+                                                'Are you sure you want to logout?',
+                                            btnText: 'Logout',
+                                            textColor: kcE51414,
+                                            callback: () {
+                                              pVm.logout(context);
+                                            })
+                                        : null,
+                                child: Container(
+                                  color: Colors.white,
+                                  margin: const EdgeInsets.only(bottom: 30),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: kcPrimaryColor
+                                                .withOpacity(0.1)),
+                                        child: Icon(
+                                          settingData[index].iconn,
+                                          color: kcPrimaryColor,
                                         ),
-                                        const SizedBox(width: 10),
-                                        Text(settingData[index].title!),
-                                        const Spacer(),
-                                        Icon(Icons.arrow_forward_ios_sharp,
-                                            color:
-                                                kcPrimaryColor.withOpacity(0.1))
-                                      ],
-                                    ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(settingData[index].title!),
+                                      const Spacer(),
+                                      Icon(Icons.arrow_forward_ios_sharp,
+                                          color:
+                                              kcPrimaryColor.withOpacity(0.1))
+                                    ],
                                   ),
-                                );
-                              }),
+                                ),
+                              );
+                            },
+                          ),
                         )
                       ],
                     ),

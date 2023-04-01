@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:green_tech_app/getit.dart';
 import 'package:green_tech_app/utils/color_utils.dart';
@@ -12,13 +11,13 @@ class EditProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-final userDetail =  getIt.get<ProfileViewModel>().cachedUserDetail!.data!;
+    final userDetail = getIt.get<ProfileViewModel>().cachedUserDetail!.data!;
     return Scaffold(
         appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        title: Text('Profile', style: stBlack50016),
-      ),
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: Text('Profile', style: stBlack50016),
+        ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -57,9 +56,7 @@ final userDetail =  getIt.get<ProfileViewModel>().cachedUserDetail!.data!;
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    
                     'Full Name',
-                    
                     style: stBlackWithOpacity30014,
                   ),
                   TextFormField(
@@ -90,8 +87,6 @@ final userDetail =  getIt.get<ProfileViewModel>().cachedUserDetail!.data!;
                     initialValue: '${userDetail.phone}',
                     decoration: borderTextInputDecoration,
                   ),
-                  // const SizedBox(height: 50),
-                  // CustomButtonWidget(title: 'Save Changes', callback: () {})
                 ],
               ),
             ],

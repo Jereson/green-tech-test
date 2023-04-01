@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 enum ViewState { busy, done, error, none, noInternet }
 
 class BaseViewModel with ChangeNotifier {
-
   ViewState viewState = ViewState.none;
   String viewMessage = '';
   String errorMessage = '';
   bool _disposed = false;
 
- 
   bool get hasEncounteredError =>
       viewState == ViewState.error || viewState == ViewState.noInternet;
   bool get isBusy => viewState == ViewState.done;
@@ -26,7 +24,7 @@ class BaseViewModel with ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-    String? emailValitor(String? value) {
+  String? emailValitor(String? value) {
     if (value!.trim().isEmpty) {
       return 'Field required';
     } else if (!value.contains('@') ||
@@ -77,5 +75,4 @@ class BaseViewModel with ChangeNotifier {
       return null;
     }
   }
-
 }
